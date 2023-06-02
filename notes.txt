@@ -1,0 +1,67 @@
+https://stackabuse.com/how-to-return-http-status-codes-in-a-spring-boot-application/
+
+
+  
+    @GetMapping("/response_entity")
+    public ResponseEntity<String> withResponseEntity() {
+        return ResponseEntity.status(HttpStatus.CREATED).body("HTTP Status will be CREATED (CODE 201)\n");
+    }   
+
+    
+	Operation		SQL	         HTTP verbs	         RESTful Web Service
+	Create	 	   INSERT	      PUT/POST	                POST
+	Read	 	   SELECT	        GET	                    GET
+	Update	       UPDATE	    PUT/POST/PATCH	            PUT
+	Delete	       DELETE	       DELETE	               DELETE
+
+
+
+
+
+
+
+
+
+
+
+
+
+@PostMapping("/emplogin")
+	public String authenticate(@RequestBody EmployeeLoginBean emplogin)
+	{
+		boolean isCorrect = false;
+		EmployeeLoginBean dbUser = employeeDao.getEmpByEmail(emplogin.getEmail());
+		
+		if (dbUser != null) {
+			
+			if(bcryptPasswordEncoder.matches(emplogin.getPassword(), dbUser.getPassword())==true)
+			{
+				isCorrect=true;
+				System.out.println("Login Successfully");
+				return "Login Successfully";
+			}
+			else
+			{
+				return "Your Password is incorrect";
+			}
+		}
+		if(dbUser==null)
+		{
+			return "Invalid User with wrong emailId!";
+		}
+		
+		return "Login Successfully";
+		
+	
+	}
+
+
+
+
+
+
+
+
+
+
+
