@@ -193,6 +193,7 @@ public class EmployeeController {
 
 	}
 
+	//Update Employee
 	@PutMapping("/employee")
 	public EmployeeBean updateEmployee(@RequestBody EmployeeBean employee) {
 
@@ -208,5 +209,17 @@ public class EmployeeController {
 		return employee;// object json
 
 	}
+	
+	
+	//Forgot Password
+	
+/*	@PostMapping("/forgetpassword")
+	public String forgetPassword()
+	{
+		
+	}*/
+	
+	
+	
 
 }

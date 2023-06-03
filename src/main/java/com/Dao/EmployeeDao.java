@@ -114,11 +114,5 @@ public class EmployeeDao {
 		}
 		return dbemplogin;
 	}
-	
-	
-	
-	
-	
-	
 
 }
