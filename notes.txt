@@ -65,3 +65,24 @@ https://stackabuse.com/how-to-return-http-status-codes-in-a-spring-boot-applicat
 
 
 
+
+Logic
+
+
+login
+
+ generate token
+ 
+	email:
+	password:
+	
+logout//token
+
+	employee logout 
+
+
+
+
+
+
+

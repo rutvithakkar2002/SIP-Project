@@ -94,8 +94,8 @@ public class EmployeeDao {
 	
 	public void savelogin(EmployeeLoginBean emp) {
 		stmt.update(
-				"insert into emp_login(emp_id,first_name,last_name,status,login_time,email,password) values (?,?,?,?,?,?,?)",
-				emp.getEmp_id(),emp.getFirst_name(),emp.getLast_name(),emp.isStatus(),emp.getLogin_time(),emp.getEmail(),emp.getPassword());
+				"insert into emp_login(emp_id,first_name,last_name,status,login_time,email,password,token) values (?,?,?,?,?,?,?,?)",
+				emp.getEmp_id(),emp.getFirst_name(),emp.getLast_name(),emp.isStatus(),emp.getLogin_time(),emp.getEmail(),emp.getPassword(),emp.getToken());
 	}
 	
 	//This will check in emplogin table

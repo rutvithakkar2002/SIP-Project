@@ -6,6 +6,9 @@ public class EmployeeLoginBean {
 	private String email;
 	private String password;
 	private Integer emp_id;
+	
+	private String token;
+	
 	private boolean status;
 	private String first_name;
 	private String last_name;
@@ -76,5 +79,17 @@ public class EmployeeLoginBean {
 	public void setLogin_id(Integer login_id) {
 		this.login_id = login_id;
 	}
+
+	public String getToken() {
+		return token;
+	}
+
+	public void setToken(String token) {
+		this.token = token;
+	}
+	
+	
+	
+	
 
 }

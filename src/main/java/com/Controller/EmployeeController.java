@@ -23,6 +23,7 @@ import com.Bean.EmployeeBean;
 import com.Bean.EmployeeLoginBean;
 
 import com.Dao.EmployeeDao;
+import com.service.TokenGenerator;
 
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -41,6 +42,9 @@ public class EmployeeController {
 
 	@Autowired
 	BCryptPasswordEncoder bcryptPasswordEncoder;
+	
+	@Autowired
+	TokenGenerator tokenGenerator;
 
 	/*
 	 * @Autowired MailService mailerService;
@@ -104,14 +108,14 @@ public class EmployeeController {
 		EmployeeLoginBean dbUser = employeeDao.getEmpByEmail(emplogin.getEmail());
 
 		if (dbUser != null) {
-
+			System.out.println("dbuser got");
 			if (bcryptPasswordEncoder.matches(emplogin.getPassword(), dbUser.getPassword()) == true) {
 				isCorrect = true;
 
 				EmployeeLoginBean dbloginuser = employeeDao.getEmpBylogintable(emplogin.getEmail());
 				System.out.println("after method");
-				if (dbloginuser.isStatus()==false) {
-
+			//	if (dbloginuser.isStatus()==false) {
+				if(dbloginuser==null) {
 					String date = getDate();
 					emplogin.setLogin_time(date);
 					emplogin.setStatus(true);
@@ -125,9 +129,14 @@ public class EmployeeController {
 
 					System.out.println(emplogin.getEmp_id());
 					System.out.println(emplogin.getLogin_time());
-
+						
+					String token=tokenGenerator.generateToken();
+					System.out.println(token);
+					
+					emplogin.setToken(token);
+					
 					employeeDao.savelogin(emplogin);
-					return "Login Successfully";
+					return "Login Successfully and Your logout token is"+token;
 				}
 				else
 				{
