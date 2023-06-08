@@ -21,8 +21,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.Bean.EmployeeBean;
 import com.Bean.EmployeeLoginBean;
-
+import com.Bean.ForgetPasswordBean;
 import com.Dao.EmployeeDao;
+import com.service.MailService;
 import com.service.TokenGenerator;
 
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -42,13 +43,12 @@ public class EmployeeController {
 
 	@Autowired
 	BCryptPasswordEncoder bcryptPasswordEncoder;
-	
+
 	@Autowired
 	TokenGenerator tokenGenerator;
 
-	/*
-	 * @Autowired MailService mailerService;
-	 */
+	@Autowired
+	MailService mailerService;
 
 	// signup
 	// new
@@ -114,8 +114,8 @@ public class EmployeeController {
 
 				EmployeeLoginBean dbloginuser = employeeDao.getEmpBylogintable(emplogin.getEmail());
 				System.out.println("after method");
-			//	if (dbloginuser.isStatus()==false) {
-				if(dbloginuser==null) {
+				// if (dbloginuser.isStatus()==false) {
+				if (dbloginuser == null) {
 					String date = getDate();
 					emplogin.setLogin_time(date);
 					emplogin.setStatus(true);
@@ -129,17 +129,15 @@ public class EmployeeController {
 
 					System.out.println(emplogin.getEmp_id());
 					System.out.println(emplogin.getLogin_time());
-						
-					String token=tokenGenerator.generateToken();
+
+					String token = tokenGenerator.generateToken();
 					System.out.println(token);
-					
+
 					emplogin.setToken(token);
-					
+
 					employeeDao.savelogin(emplogin);
-					return "Login Successfully and Your logout token is"+token;
-				}
-				else
-				{
+					return "Login Successfully and Your logout token is" + token;
+				} else {
 					return "You are Already Loged in";
 				}
 
@@ -155,20 +153,26 @@ public class EmployeeController {
 
 	}
 
-	
-	@PostMapping("emplogout")
-	public String employeeLogout(@RequestBody EmployeeLoginBean emp)
-	{
-		EmployeeLoginBean dblogoutuser = employeeDao.getEmpBylogintable(emp.getEmail());
-		
-		
-		return "";
+	@GetMapping("/emplogout/{token}")
+	public String employeeLogout(@PathVariable("token") String token) {
+
+		System.out.println("Hello");
+
+		EmployeeLoginBean dbemplogout = employeeDao.getEmpByToken(token);
+
+		/*
+		 * if (dbemplogout == null) { return "can't logout"; } else {
+		 */
+
+		String date = getDate();
+
+		dbemplogout.setLogout_time(date);
+		dbemplogout.setStatus(false);
+		employeeDao.updatelogouttime(token, dbemplogout.setLogout_time(date));
+		return "Logout Successfully";
+		// }
 	}
-	
-	
-	
-	
-	
+
 	// list
 	@GetMapping("/employees")
 	public List<EmployeeBean> getAllEmployees() {
@@ -202,7 +206,7 @@ public class EmployeeController {
 
 	}
 
-	//Update Employee
+	// Update Employee
 	@PutMapping("/employee")
 	public EmployeeBean updateEmployee(@RequestBody EmployeeBean employee) {
 
@@ -218,17 +222,74 @@ public class EmployeeController {
 		return employee;// object json
 
 	}
-	
-	
-	//Forgot Password
-	
-/*	@PostMapping("/forgetpassword")
-	public String forgetPassword()
-	{
-		
-	}*/
-	
-	
-	
+
+	// Forgot Password
+
+	@PostMapping("/forgetpassword")
+	public String forgetPassword(@RequestBody EmployeeBean emp) {
+
+		EmployeeBean dbemp = employeeDao.getEmployeeByEmail(emp.getEmail());
+
+		if (dbemp == null) {
+			return "Invalid Mail!!";
+		}
+
+		else {
+
+			int otp1 = (int) (Math.random() * 1000000);
+			System.out.println(otp1);
+			String otp=Integer.toString(otp1);
+			
+			emp.setOtp(otp);
+			employeeDao.updateOtp(emp.getEmail(), otp);
+			mailerService.sendMail(dbemp);
+			return "Otp Sent on your email";
+
+		}
+
+	}
+
+	@PostMapping("/updatepassword")
+	public ResponseEntity updatePassword(@RequestBody ForgetPasswordBean fdto) {
+		EmployeeBean emp = employeeDao.getEmployeeByEmail(fdto.getEmail());
+
+		if (emp != null) {
+			// db check
+			if (emp.getOtp().equals(fdto.getOtp())) {
+			//	employeeDao.updateOtp(emp.getEmail(), "");
+				String password = bcryptPasswordEncoder.encode(fdto.getPassword());
+				employeeDao.updatePassword(emp.getEmail(),password);
+
+				System.out.println("Password Updated");
+
+			}
+			else
+			{
+				System.out.println("You entered wrong otp!!!");
+				return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(fdto);
+			}
+			return ResponseEntity.ok(fdto);
+
+		}
+		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(fdto);
+	}
+
+	/*
+	 * @PostMapping("/updatepassword") public String updatePassword(@RequestBody
+	 * EmployeeBean emp) { System.out.println(emp.getEmail());
+	 * System.out.println(emp.getOtp()); System.out.println(emp.getPassword());
+	 * EmployeeBean dbUser = employeeDao.getEmployeeByEmail(emp.getEmail()); if
+	 * (dbUser == null) { return "Invalid EMAIL";
+	 * 
+	 * } else { System.out.println("original otp = > " + dbUser.getOtp()); if
+	 * (dbUser.getOtp().equals(emp.getOtp())) {
+	 * employeeDao.updatePassword(emp.getEmail(), emp.getPassword()); return
+	 * "Password successfully modified..."; // now try login with new password }
+	 * else { return "Invalid OTP";
+	 * 
+	 * } }
+	 * 
+	 * }
+	 */
 
 }

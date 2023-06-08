@@ -13,7 +13,8 @@ public class EmployeeLoginBean {
 	private String first_name;
 	private String last_name;
 	private String login_time;
-
+	private String logout_time;
+	
 	public String getEmail() {
 		return email;
 	}
@@ -87,6 +88,15 @@ public class EmployeeLoginBean {
 	public void setToken(String token) {
 		this.token = token;
 	}
+
+	public String getLogout_time() {
+		return logout_time;
+	}
+
+	public String setLogout_time(String logout_time) {
+		return this.logout_time = logout_time;
+	}
+	
 	
 	
 	

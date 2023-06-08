@@ -17,7 +17,7 @@ import com.Bean.EmployeeBean;
 @Service
 public class MailService {
 
-/*	public void sendMail(EmployeeBean emp) {
+	public void sendMail(EmployeeBean emp) {
 		// email
 		// firstName
 		// otp
@@ -45,7 +45,7 @@ public class MailService {
 
 			protected PasswordAuthentication getPasswordAuthentication() {
 
-				return new PasswordAuthentication("shivamshah.glsbca20@gmail.com", "pgnfclsczdysollz");
+				return new PasswordAuthentication("thakkarrutvi2002@gmail.com", "klmzczohitnfweto");
 
 			}
 
@@ -79,6 +79,5 @@ public class MailService {
 			mex.printStackTrace();
 		}
 
-	}*/
-
+	}
 }
