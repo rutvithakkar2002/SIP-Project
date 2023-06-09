@@ -238,8 +238,8 @@ public class EmployeeController {
 
 			int otp1 = (int) (Math.random() * 1000000);
 			System.out.println(otp1);
-			String otp=Integer.toString(otp1);
-			
+			String otp = Integer.toString(otp1);
+
 			emp.setOtp(otp);
 			employeeDao.updateOtp(emp.getEmail(), otp);
 			mailerService.sendMail(dbemp);
@@ -256,20 +256,20 @@ public class EmployeeController {
 		if (emp != null) {
 			// db check
 			if (emp.getOtp().equals(fdto.getOtp())) {
-			//	employeeDao.updateOtp(emp.getEmail(), "");
+				// employeeDao.updateOtp(emp.getEmail(), "");
 				String password = bcryptPasswordEncoder.encode(fdto.getPassword());
-				employeeDao.updatePassword(emp.getEmail(),password);
+				employeeDao.updatePassword(emp.getEmail(), password);
 
 				System.out.println("Password Updated");
 
-			}
-			else
-			{
+			} else {
 				System.out.println("You entered wrong otp!!!");
 				return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(fdto);
 			}
-			return ResponseEntity.ok(fdto);
 
+			return ResponseEntity.ok(fdto);
+		} else {
+			System.out.println("employee not found!!");
 		}
 		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(fdto);
 	}
