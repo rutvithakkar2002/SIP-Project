@@ -3,8 +3,7 @@ package com.Controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -27,6 +26,8 @@ public class LeaveController {
 	@Autowired
 	EmployeeDao employeeDao;
 
+	double total_leave=0;
+	
 //	public ResponseEntity<LeaveBean> saveLeaves(@PathVariable("emp_id") int empid, @RequestBody LeaveBean lb) {
 	@PostMapping("/leaves/{emp_id}")
 	public String saveLeaves(@PathVariable("emp_id") int empid, @RequestBody LeaveBean lb) {
@@ -41,12 +42,15 @@ public class LeaveController {
 			lb.setDepartment_name(empBean.getDepartment_name());
 
 		}
-
+		
+		total_leave=lb.getFull_day_leave()+lb.getHalf_day_leave()+lb.getMedical_leave();
+		lb.setTotal_leave(total_leave);
+		
 		ld.saveleave(lb);
 
 		System.out.println("leave type inserted!");
 
-		return "EmployeeId not found";
+		return "Employee request sent to the admin";
 
 		/*
 		 * System.out.println(lb.getEmp_id());
@@ -67,7 +71,7 @@ public class LeaveController {
 		 */
 	}
 
-	@DeleteMapping("leaves/{emp_id}")
+	@DeleteMapping("/leaves/{emp_id}")
 	public String deleteLeave(@PathVariable("emp_id") int employeeid) {
 
 		LeaveBean emp = ld.getleavebyid(employeeid);
@@ -91,6 +95,51 @@ public class LeaveController {
 
 		return adminsideleaves;
 	}
+
+	@PostMapping("leaveresponse/{emp_id}")
+	public String saveLeavesresponse(@PathVariable("emp_id") int empid) {
+		AdminsideLeaveBean aslb=new AdminsideLeaveBean();
+
+		LeaveBean lb = ld.getleavebyempid(empid);
+		System.out.println("Employee Id Got");
+
+		if (lb != null) {
+			aslb.setLeave_id(lb.getLeave_id());
+			aslb.setEmp_id(lb.getEmp_id());
+			aslb.setFirst_name(lb.getFirst_name());
+			aslb.setLast_name(lb.getLast_name());
+			aslb.setDepartment_name(lb.getDepartment_name());
+			aslb.setStart_date(lb.getStart_date());
+			aslb.setEnd_date(lb.getEnd_date());
+			aslb.setFull_day_leave(lb.getFull_day_leave());
+			aslb.setHalf_day_leave(lb.getHalf_day_leave());
+			aslb.setMedical_leave(lb.getMedical_leave());
+			aslb.setIsapproved(true);
+
+			ld.saveLeaveresponse(aslb);
+			return "save request";
+		} else {
+			return "Employee Not Found!";
+		}
+	}
+	
+	
+	
+
+	@GetMapping("/approvedleaves")
+	public List<AdminsideLeaveBean> getAllapprovedLeavesempside() {
+		List<AdminsideLeaveBean> empsideapprovedleaves = ld.getAllapprovedLeaves();
+		System.out.println("ALL Approved Leaves are displayed at employee side");
+
+		return empsideapprovedleaves;
+	}
+
+	
+	
+	
+	
+	
+	
 
 	// list
 	/*

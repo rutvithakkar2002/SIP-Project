@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.Bean.BasicSalaryBean;
 import com.Bean.EmployeeBean;
 import com.Bean.EmployeeLoginBean;
 import com.Bean.ForgetPasswordBean;
@@ -71,9 +72,20 @@ public class EmployeeController {
 
 		emp.setJoining_date(date);
 
-		employeeDao.saveEmployee(emp);
-
-		System.out.println("Employee inserted!");
+	
+		if(emp.getDepartment_name().toUpperCase().equals("SALES")|| emp.getDepartment_name().toUpperCase().equals("HR")|| emp.getDepartment_name().toUpperCase().equals("FINANCE")||emp.getDepartment_name().toUpperCase().equals("ACCOUNTING")||emp.getDepartment_name().toUpperCase().equals("TRAINING")||emp.getDepartment_name().toUpperCase().equals("DEVELOPER")||emp.getDepartment_name().toUpperCase().equals("QA")||emp.getDepartment_name().toUpperCase().equals("ITSERVICE")||emp.getDepartment_name().toUpperCase().equals("PRODUCTION")||emp.getDepartment_name().toUpperCase().equals("MANUFACTURING"))
+		{
+			employeeDao.saveEmployee(emp);
+			
+			System.out.println("Employee inserted!");
+		}
+		else
+		{
+			System.out.println("invalid departmentname");
+		}
+		
+		
+	
 
 		ResponseEntity<EmployeeBean> r = new ResponseEntity<EmployeeBean>(emp, HttpStatus.OK);
 		/*
@@ -207,7 +219,7 @@ public class EmployeeController {
 	}
 
 	// Update Employee
-	@PutMapping("/employee")
+	/*@PutMapping("/employee")
 	public EmployeeBean updateEmployee(@RequestBody EmployeeBean employee) {
 
 		System.out.println(employee.getFirst_name());
@@ -221,7 +233,30 @@ public class EmployeeController {
 
 		return employee;// object json
 
+	}*/
+	
+	
+	
+	
+	@PutMapping("/employee/{emp_id}")
+	public EmployeeBean updateEmployee(@PathVariable("emp_id") int empid,@RequestBody EmployeeBean employee) {
+
+		EmployeeBean emp = employeeDao.getemployeebyid(empid);
+		System.out.println("Employee Got");
+		System.out.println(employee.getFirst_name());
+		System.out.println(employee.getLast_name());
+		System.out.println(employee.getEmail());
+		System.out.println(employee.getPassword());
+
+		employeeDao.updateEmployee(emp);
+
+		System.out.println("employee Updated..");
+
+		return employee;// object json
+		
 	}
+	
+	
 
 	// Forgot Password
 
@@ -292,4 +327,20 @@ public class EmployeeController {
 	 * }
 	 */
 
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 }

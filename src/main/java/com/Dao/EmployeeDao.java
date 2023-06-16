@@ -59,6 +59,8 @@ public class EmployeeDao {
 	public EmployeeBean getemployeebyid(int employeeid) {
 		return stmt.queryForObject("select * from employee where emp_id=?",
 				new BeanPropertyRowMapper<EmployeeBean>(EmployeeBean.class), new Object[] { employeeid });
+		
+	
 	}
 
 	public boolean updateEmployee(EmployeeBean employee) {

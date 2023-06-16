@@ -13,6 +13,7 @@ public class LeaveBean {
 	private Integer medical_leave;
 	private String start_date;
 	private String end_date;
+	private double total_leave;
 	// private boolean isapproved;
 
 	public Integer getEmp_id() {
@@ -94,6 +95,15 @@ public class LeaveBean {
 	public void setEnd_date(String end_date) {
 		this.end_date = end_date;
 	}
+
+	public double getTotal_leave() {
+		return total_leave;
+	}
+
+	public void setTotal_leave(double total_leave) {
+		this.total_leave = total_leave;
+	}
+
 	/*
 	 * public boolean isIsapproved() { return isapproved; } public void
 	 * setIsapproved(boolean isapproved) { this.isapproved = isapproved; }
