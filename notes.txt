@@ -82,6 +82,71 @@ logout//token
 
 
 
+basic salary
+
+Da===basic salary *10%
+hra==(basic salary +da)*30%
+
+total salary=basic slary+da+hra
+
+---------------------------------------
+total salary= basic salary + da +hra
+
+total deduction = leaves + pf
+
+net salary = total salary-total deduction
+
+
+
+
+
+						
+	fullleave	8	2*8=16		month=8*31	
+	half		4				248 hours	
+	medical		2	2*8 =16			
+								4 Sunday		4*8=32
+						
+								2 holiday extra	
+
+							----------------------
+								6 *8=48
+
+
+
+
+what are oops piller concepts?
+
+class & objects
+inheritance-->parent class & child class
+polymorphism--> diff behaviour same classor method
+abstraction	--> hiding the internal details and showing only functionly
+encapsulation-->wrapping up of data into a unit such as class!!!
+
+
+
+interface--?implements
+
+
+
+
+--------------------------------------------
+
+
+30000
+
+30
+
+perday:1000
+
+fulldayleave:2*1000=2000
+
+halfdayleave:1*500=500
+	     
+medicalleave:12 made  chhe!
+	
+	12
+		leave not applied
+
 
 
 

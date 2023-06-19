@@ -10,6 +10,7 @@ import org.springframework.stereotype.Repository;
 import com.Bean.AdminsideLeaveBean;
 
 import com.Bean.LeaveBean;
+import com.Bean.TotalLeavesofEmp;
 @Repository
 public class LeaveDao {
 	
@@ -21,8 +22,8 @@ public class LeaveDao {
 		// TODO Auto-generated method stub
 		System.out.println("I am here");
 		stmt.update(
-				"insert into leave (emp_id,department_name,first_name,last_name,full_day_leave,half_day_leave,medical_leave,start_date,end_date,total_leave) values (?,?,?,?,?,?,?,?,?,?)",
-				lb.getEmp_id(),lb.getDepartment_name(),lb.getFirst_name(),lb.getLast_name(),lb.getFull_day_leave(),lb.getHalf_day_leave(),lb.getMedical_leave(),lb.getStart_date(),lb.getEnd_date(),lb.getTotal_leave());
+				"insert into leave (emp_id,department_name,first_name,last_name,full_day_leave,half_day_leave,medical_leave,start_date,end_date) values (?,?,?,?,?,?,?,?,?)",
+				lb.getEmp_id(),lb.getDepartment_name(),lb.getFirst_name(),lb.getLast_name(),lb.getFull_day_leave(),lb.getHalf_day_leave(),lb.getMedical_leave(),lb.getStart_date(),lb.getEnd_date());
 	}
 
 
@@ -77,8 +78,8 @@ public class LeaveDao {
 
 	public void saveLeaveresponse(AdminsideLeaveBean aslb) {
 		stmt.update(
-				"insert into leave_admin (emp_id,department_name,first_name,last_name,full_day_leave,half_day_leave,medical_leave,start_date,end_date,isapproved ) values (?,?,?,?,?,?,?,?,?,?)",
-				aslb.getEmp_id(),aslb.getDepartment_name(),aslb.getFirst_name(),aslb.getLast_name(),aslb.getFull_day_leave(),aslb.getHalf_day_leave(),aslb.getMedical_leave(),aslb.getStart_date(),aslb.getEnd_date(),aslb.isIsapproved());
+				"insert into leave_admin (leave_id,emp_id,department_name,first_name,last_name,full_day_leave,half_day_leave,medical_leave,start_date,end_date,isapproved ) values (?,?,?,?,?,?,?,?,?,?,?)",
+				aslb.getLeave_id(),aslb.getEmp_id(),aslb.getDepartment_name(),aslb.getFirst_name(),aslb.getLast_name(),aslb.getFull_day_leave(),aslb.getHalf_day_leave(),aslb.getMedical_leave(),aslb.getStart_date(),aslb.getEnd_date(),aslb.isIsapproved());
 		
 	}
 
@@ -87,4 +88,38 @@ public class LeaveDao {
 		return stmt.query("select * from leave_admin", new BeanPropertyRowMapper<AdminsideLeaveBean>(AdminsideLeaveBean.class));
 		}
 
+
+	public AdminsideLeaveBean gettotalLeavebyempid(int empid) {
+	System.out.println("Hey i m here dear vidhi");
+		return stmt.queryForObject("select * from leave_admin where emp_id=?",
+				new BeanPropertyRowMapper<AdminsideLeaveBean>(AdminsideLeaveBean.class), new Object[] { empid });
+	
+	}
+
+
+	public void savetotalleaveperemp(TotalLeavesofEmp tle) {
+		
+		stmt.update(
+				"insert into totalleaveofemp (emp_id,leave_id,full_day_leave,half_day_leave,medical_leave,total_leave ) values (?,?,?,?,?,?)",
+				tle.getEmp_id(),tle.getLeave_id(),tle.getFull_day_leave(),tle.getHalf_day_leave(),tle.getMedical_leave(),tle.getTotal_leave());
+		
+	}
+
+
+	public void getfulldayleaveperemp(int empid) {
+		 stmt.queryForObject("select SUM(full_day_leave) from leave_admin where emp_id=?",
+				new BeanPropertyRowMapper<AdminsideLeaveBean>(AdminsideLeaveBean.class), new Object[] { empid });
+	
+	}
+	
+
+	
+	
+	
+	
+	
+	
+	
+	
+	
 }

@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.Bean.AdminsideLeaveBean;
 import com.Bean.EmployeeBean;
 import com.Bean.LeaveBean;
+import com.Bean.TotalLeavesofEmp;
 import com.Dao.EmployeeDao;
 import com.Dao.LeaveDao;
 
@@ -26,8 +27,8 @@ public class LeaveController {
 	@Autowired
 	EmployeeDao employeeDao;
 
-	double total_leave=0;
-	
+	// double total_leave=0;
+
 //	public ResponseEntity<LeaveBean> saveLeaves(@PathVariable("emp_id") int empid, @RequestBody LeaveBean lb) {
 	@PostMapping("/leaves/{emp_id}")
 	public String saveLeaves(@PathVariable("emp_id") int empid, @RequestBody LeaveBean lb) {
@@ -42,10 +43,10 @@ public class LeaveController {
 			lb.setDepartment_name(empBean.getDepartment_name());
 
 		}
-		
-		total_leave=lb.getFull_day_leave()+lb.getHalf_day_leave()+lb.getMedical_leave();
-		lb.setTotal_leave(total_leave);
-		
+
+		// total_leave=lb.getFull_day_leave()+lb.getHalf_day_leave()+lb.getMedical_leave();
+		// lb.setTotal_leave(total_leave);
+
 		ld.saveleave(lb);
 
 		System.out.println("leave type inserted!");
@@ -97,14 +98,16 @@ public class LeaveController {
 	}
 
 	@PostMapping("leaveresponse/{emp_id}")
-	public String saveLeavesresponse(@PathVariable("emp_id") int empid) {
-		AdminsideLeaveBean aslb=new AdminsideLeaveBean();
+	public String saveLeavesresponse(@PathVariable("emp_id") int empid, @RequestBody AdminsideLeaveBean aslb) {
+		// AdminsideLeaveBean aslb=new AdminsideLeaveBean();
 
 		LeaveBean lb = ld.getleavebyempid(empid);
 		System.out.println("Employee Id Got");
 
 		if (lb != null) {
+
 			aslb.setLeave_id(lb.getLeave_id());
+
 			aslb.setEmp_id(lb.getEmp_id());
 			aslb.setFirst_name(lb.getFirst_name());
 			aslb.setLast_name(lb.getLast_name());
@@ -114,7 +117,7 @@ public class LeaveController {
 			aslb.setFull_day_leave(lb.getFull_day_leave());
 			aslb.setHalf_day_leave(lb.getHalf_day_leave());
 			aslb.setMedical_leave(lb.getMedical_leave());
-			aslb.setIsapproved(true);
+			// aslb.setIsapproved(true);
 
 			ld.saveLeaveresponse(aslb);
 			return "save request";
@@ -122,9 +125,6 @@ public class LeaveController {
 			return "Employee Not Found!";
 		}
 	}
-	
-	
-	
 
 	@GetMapping("/approvedleaves")
 	public List<AdminsideLeaveBean> getAllapprovedLeavesempside() {
@@ -133,13 +133,6 @@ public class LeaveController {
 
 		return empsideapprovedleaves;
 	}
-
-	
-	
-	
-	
-	
-	
 
 	// list
 	/*
@@ -155,5 +148,42 @@ public class LeaveController {
 	 * System.out.println("ALL Leaves are displayed at admin side"); return
 	 * adminsideleaves; }
 	 */
+
+	// total leaves of leaves
+
+	@PostMapping("peremptotalleaves/{emp_id}")
+	public String saveTotalLeaves(@PathVariable("emp_id") int empid) {
+		// AdminsideLeaveBean aslb=new AdminsideLeaveBean();
+
+		// LeaveBean lb = ld.getleavebyempid(empid);
+
+		TotalLeavesofEmp tle = new TotalLeavesofEmp();
+		AdminsideLeaveBean aslb = ld.gettotalLeavebyempid(empid);
+		System.out.println("Employee Id Got");
+
+		if (aslb != null) {
+
+			tle.setEmp_id(aslb.getEmp_id());
+			tle.setLeave_id(aslb.getLeave_id());
+
+			// Integer i=ld.getfulldayLeave();
+
+			int fl=ld.getfulldayleaveperemp(empid);
+
+			tle.setFull_day_leave(aslb.getFull_day_leave());
+			tle.setHalf_day_leave(aslb.getHalf_day_leave());
+			tle.setMedical_leave(aslb.getMedical_leave());
+
+			double totalleave = aslb.getFull_day_leave() + aslb.getHalf_day_leave() + aslb.getMedical_leave();
+
+			tle.setTotal_leave(totalleave);
+
+			ld.savetotalleaveperemp(tle);
+
+			return "save request";
+		} else {
+			return "Employee Not Found!";
+		}
+	}
 
 }
