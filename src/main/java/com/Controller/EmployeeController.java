@@ -1,7 +1,7 @@
 package com.Controller;
 
 import java.text.SimpleDateFormat;
-
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -37,6 +37,7 @@ public class EmployeeController {
 		Date date = new Date();
 		SimpleDateFormat s = new SimpleDateFormat("dd/MM/yyyy hh:mm:ss a");
 		return s.format(date);
+
 	}
 
 	@Autowired
@@ -72,20 +73,25 @@ public class EmployeeController {
 
 		emp.setJoining_date(date);
 
-	
-		if(emp.getDepartment_name().toUpperCase().equals("SALES")|| emp.getDepartment_name().toUpperCase().equals("HR")|| emp.getDepartment_name().toUpperCase().equals("FINANCE")||emp.getDepartment_name().toUpperCase().equals("ACCOUNTING")||emp.getDepartment_name().toUpperCase().equals("TRAINING")||emp.getDepartment_name().toUpperCase().equals("DEVELOPER")||emp.getDepartment_name().toUpperCase().equals("QA")||emp.getDepartment_name().toUpperCase().equals("ITSERVICE")||emp.getDepartment_name().toUpperCase().equals("PRODUCTION")||emp.getDepartment_name().toUpperCase().equals("MANUFACTURING"))
-		{
-			employeeDao.saveEmployee(emp);
+		if (emp.getDepartment_name().toUpperCase().equals("SALES")
+				|| emp.getDepartment_name().toUpperCase().equals("HR")
+				|| emp.getDepartment_name().toUpperCase().equals("FINANCE")
+				|| emp.getDepartment_name().toUpperCase().equals("ACCOUNTING")
+				|| emp.getDepartment_name().toUpperCase().equals("TRAINING")
+				|| emp.getDepartment_name().toUpperCase().equals("DEVELOPER")
+				|| emp.getDepartment_name().toUpperCase().equals("QA")
+				|| emp.getDepartment_name().toUpperCase().equals("ITSERVICE")
+				|| emp.getDepartment_name().toUpperCase().equals("PRODUCTION")
+				|| emp.getDepartment_name().toUpperCase().equals("MANUFACTURING")) {
 			
+			emp.setStatus(true);
+			
+			employeeDao.saveEmployee(emp);
+
 			System.out.println("Employee inserted!");
-		}
-		else
-		{
+		} else {
 			System.out.println("invalid departmentname");
 		}
-		
-		
-	
 
 		ResponseEntity<EmployeeBean> r = new ResponseEntity<EmployeeBean>(emp, HttpStatus.OK);
 		/*
@@ -130,10 +136,26 @@ public class EmployeeController {
 				if (dbloginuser == null) {
 					String date = getDate();
 					emplogin.setLogin_time(date);
+
+					// Calendar calendar = Calendar.getInstance();
+					// System.out.println(calendar.get(Calendar.MONTH));
+
 					emplogin.setStatus(true);
 					emplogin.setEmp_id(dbUser.getEmp_id());
 					emplogin.setFirst_name(dbUser.getFirst_name());
 					emplogin.setLast_name(dbUser.getLast_name());
+
+					SimpleDateFormat simpleformat = new SimpleDateFormat("E, dd MMM yyyy HH:mm:ss");
+					simpleformat = new SimpleDateFormat("MMMM");
+					String currentMonth = simpleformat.format(new Date());
+					System.out.println("Month in MMMM format = " + currentMonth);
+					emplogin.setMonth(currentMonth);
+
+					Calendar cal = Calendar.getInstance();
+					int year = cal.get(Calendar.YEAR);
+					System.out.println(year);
+
+					emplogin.setYear(year);
 
 					System.out.println("Login Successfully");
 
@@ -219,9 +241,29 @@ public class EmployeeController {
 	}
 
 	// Update Employee
-	/*@PutMapping("/employee")
-	public EmployeeBean updateEmployee(@RequestBody EmployeeBean employee) {
+	/*
+	 * @PutMapping("/employee") public EmployeeBean updateEmployee(@RequestBody
+	 * EmployeeBean employee) {
+	 * 
+	 * System.out.println(employee.getFirst_name());
+	 * System.out.println(employee.getLast_name());
+	 * System.out.println(employee.getEmail());
+	 * System.out.println(employee.getPassword());
+	 * 
+	 * employeeDao.updateEmployee(employee);
+	 * 
+	 * System.out.println("employee Updated..");
+	 * 
+	 * return employee;// object json
+	 * 
+	 * }
+	 */
 
+	@PutMapping("/employee/{emp_id}")
+	public EmployeeBean updateEmployee(@PathVariable("emp_id") int empid, @RequestBody EmployeeBean employee) {
+
+		EmployeeBean emp = employeeDao.getemployeebyid(empid);
+		System.out.println("Employee Got");
 		System.out.println(employee.getFirst_name());
 		System.out.println(employee.getLast_name());
 		System.out.println(employee.getEmail());
@@ -233,30 +275,7 @@ public class EmployeeController {
 
 		return employee;// object json
 
-	}*/
-	
-	
-	
-	
-	@PutMapping("/employee/{emp_id}")
-	public EmployeeBean updateEmployee(@PathVariable("emp_id") int empid,@RequestBody EmployeeBean employee) {
-
-		EmployeeBean emp = employeeDao.getemployeebyid(empid);
-		System.out.println("Employee Got");
-		System.out.println(employee.getFirst_name());
-		System.out.println(employee.getLast_name());
-		System.out.println(employee.getEmail());
-		System.out.println(employee.getPassword());
-
-		employeeDao.updateEmployee(emp);
-
-		System.out.println("employee Updated..");
-
-		return employee;// object json
-		
 	}
-	
-	
 
 	// Forgot Password
 
@@ -327,20 +346,4 @@ public class EmployeeController {
 	 * }
 	 */
 
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
 }

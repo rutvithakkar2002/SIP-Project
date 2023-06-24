@@ -19,10 +19,10 @@ public class EmployeeDao {
 
 	public void saveEmployee(EmployeeBean emp) {
 		stmt.update(
-				"insert into employee (first_name,last_name,gender,age,contact_no,email,address,city,state,pincode,joining_date,department_name,password) values (?,?,?,?,?,?,?,?,?,?,?,?,?)",
+				"insert into employee (first_name,last_name,gender,age,contact_no,email,address,city,state,pincode,joining_date,department_name,password,status) values (?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
 				emp.getFirst_name(), emp.getLast_name(), emp.getGender(), emp.getAge(), emp.getContact_no(),
 				emp.getEmail(), emp.getAddress(), emp.getCity(), emp.getState(), emp.getPincode(),
-				emp.getJoining_date(), emp.getDepartment_name(), emp.getPassword());
+				emp.getJoining_date(), emp.getDepartment_name(), emp.getPassword(),emp.isStatus());
 	}
 
 	// this will check original employee table
@@ -101,9 +101,9 @@ public class EmployeeDao {
 
 	public void savelogin(EmployeeLoginBean emp) {
 		stmt.update(
-				"insert into emp_login(emp_id,first_name,last_name,status,login_time,email,password,token,logout_time) values (?,?,?,?,?,?,?,?,?)",
+				"insert into emp_login(emp_id,first_name,last_name,status,login_time,email,password,token,logout_time,month,year) values (?,?,?,?,?,?,?,?,?,?,?)",
 				emp.getEmp_id(), emp.getFirst_name(), emp.getLast_name(), emp.isStatus(), emp.getLogin_time(),
-				emp.getEmail(), emp.getPassword(), emp.getToken(), emp.getLogout_time());
+				emp.getEmail(), emp.getPassword(), emp.getToken(), emp.getLogout_time(),emp.getMonth(),emp.getYear());
 	}
 
 	// This will check in emplogin table

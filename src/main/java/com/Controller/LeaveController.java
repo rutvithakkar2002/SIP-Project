@@ -1,5 +1,6 @@
 package com.Controller;
 
+import java.util.Iterator;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -97,12 +98,12 @@ public class LeaveController {
 		return adminsideleaves;
 	}
 
-	@PostMapping("leaveresponse/{emp_id}")
-	public String saveLeavesresponse(@PathVariable("emp_id") int empid, @RequestBody AdminsideLeaveBean aslb) {
+	@PostMapping("leaveresponse/{leave_id}")
+	public String saveLeavesresponse(@PathVariable("leave_id") int leaveid, @RequestBody AdminsideLeaveBean aslb) {
 		// AdminsideLeaveBean aslb=new AdminsideLeaveBean();
 
-		LeaveBean lb = ld.getleavebyempid(empid);
-		System.out.println("Employee Id Got");
+		LeaveBean lb = ld.getleavebyleaveid(leaveid);
+		System.out.println("leave Id Got");
 
 		if (lb != null) {
 
@@ -118,11 +119,20 @@ public class LeaveController {
 			aslb.setHalf_day_leave(lb.getHalf_day_leave());
 			aslb.setMedical_leave(lb.getMedical_leave());
 			// aslb.setIsapproved(true);
-
-			ld.saveLeaveresponse(aslb);
-			return "save request";
-		} else {
-			return "Employee Not Found!";
+			
+			if(aslb.isIsapproved()==true)
+			{
+				return "already approved";
+			}
+			else
+			{
+				ld.saveLeaveresponse(aslb);
+				return "save request";
+			}
+		} 
+		else 
+		{
+			return "leave id Not Found!";
 		}
 	}
 
@@ -158,25 +168,36 @@ public class LeaveController {
 		// LeaveBean lb = ld.getleavebyempid(empid);
 
 		TotalLeavesofEmp tle = new TotalLeavesofEmp();
-		AdminsideLeaveBean aslb = ld.gettotalLeavebyempid(empid);
+		List<AdminsideLeaveBean> aslb = ld.gettotalLeavebyempid(empid);
 		System.out.println("Employee Id Got");
 
-		if (aslb != null) {
+		if (aslb.size() > 0) {
 
-			tle.setEmp_id(aslb.getEmp_id());
-			tle.setLeave_id(aslb.getLeave_id());
+			for (AdminsideLeaveBean adminsideLeaveBean : aslb) {
+				tle.setEmp_id(adminsideLeaveBean.getEmp_id());
+				tle.setLeave_id(adminsideLeaveBean.getLeave_id());
 
-			// Integer i=ld.getfulldayLeave();
+				// Integer i=ld.getfulldayLeave();
 
-			int fl=ld.getfulldayleaveperemp(empid);
+				Integer fl = ld.getfulldayleaveperemp(empid);
 
-			tle.setFull_day_leave(aslb.getFull_day_leave());
-			tle.setHalf_day_leave(aslb.getHalf_day_leave());
-			tle.setMedical_leave(aslb.getMedical_leave());
+				tle.setFull_day_leave(fl);
 
-			double totalleave = aslb.getFull_day_leave() + aslb.getHalf_day_leave() + aslb.getMedical_leave();
+				System.out.println(fl);
 
-			tle.setTotal_leave(totalleave);
+				Integer hl = ld.gethalfdayleaveperemp(empid);
+
+				tle.setHalf_day_leave(hl);
+
+				Integer ml = ld.getmedicalleaveperemp(empid);
+
+				tle.setMedical_leave(ml);
+
+				double totalleave = fl + hl + ml;
+
+				tle.setTotal_leave(totalleave);
+
+			}
 
 			ld.savetotalleaveperemp(tle);
 

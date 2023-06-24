@@ -5,7 +5,7 @@ public class TotalLeavesofEmp {
 	private Integer emp_leave_id;
 	private Integer emp_id;
 	private Integer leave_id;
-	private Integer full_day_leave;
+	private int full_day_leave;
 	private Integer half_day_leave;
 	private Integer medical_leave;
 	private double total_leave;
@@ -34,11 +34,11 @@ public class TotalLeavesofEmp {
 		this.leave_id = leave_id;
 	}
 
-	public Integer getFull_day_leave() {
+	public int getFull_day_leave() {
 		return full_day_leave;
 	}
 
-	public void setFull_day_leave(Integer full_day_leave) {
+	public void setFull_day_leave(int full_day_leave) {
 		this.full_day_leave = full_day_leave;
 	}
 

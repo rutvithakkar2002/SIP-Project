@@ -19,6 +19,8 @@ public class EmployeeBean {
 
 	private String otp;
 	private Integer role;
+	private boolean status;
+	
 	public Integer getEmp_id() {
 		return emp_id;
 	}
@@ -156,6 +158,14 @@ public class EmployeeBean {
 
 	public void setOtp(String otp) {
 		this.otp = otp;
+	}
+
+	public boolean isStatus() {
+		return status;
+	}
+
+	public void setStatus(boolean status) {
+		this.status = status;
 	}
 	
 	

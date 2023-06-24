@@ -147,7 +147,203 @@ medicalleave:12 made  chhe!
 	12
 		leave not applied
 
+employee: status	,	salary
+
+shift 1:4 hour
+shift 2:4 hour
 
 
 
 
+
+
+---------------------------------------------------------------------------------------------------
+ public int count() {
+
+        String sql = "SELECT COUNT(*) FROM CUSTOMER";
+
+        // queryForInt() is Deprecated
+        // https://www.mkyong.com/spring/jdbctemplate-queryforint-is-deprecated/
+        //int total = jdbcTemplate.queryForInt(sql);
+
+        return jdbcTemplate.queryForObject(sql, Integer.class);
+
+    }
+
+   @Override
+    public int findMaxSalary() {
+         
+        String query = "select max(salary) from employee"; 
+        int maxSalary = getJdbcTemplate().queryForInt(query);
+        return maxSalary;
+    }
+    
+    
+	/*
+	 * public int getfulldayleaveperemp(int empid) { int fl=stmt.
+	 * queryForObject("select SUM(full_day_leave) from leave_admin where emp_id=?",
+	 * new BeanPropertyRowMapper<>(), new Object[] { empid });
+	 * 
+	 * return fl;
+	 * 
+	 * }
+	 */
+
+	/*
+	 * public Integer getfulldayleaveperemp(int empid) {
+	 * 
+	 * String count = "select SUM(full_day_leave) from leave_admin where emp_id=?";
+	 * 
+	 * return stmt.queryForObject(count, new Object[] { empid }, Integer.class);
+	 * 
+	 * }
+	 */
+
+	/*
+	 * public int getfulldayleaveperemp(int empid) {
+	 * 
+	 * String query = "select SUM(full_day_leave) from leave_admin where emp_id=?";
+	 * int count = stmt.queryForObject(query,Integer.class); return count; }
+	 */
+	
+/*	 public int getfulldayleaveperemp(int empid) {
+         
+	        int query = "select SUM(full_day_leave) from leave_admin where emp_id=?"; 
+	        int count = stmt.queryForObject(query,Integer.class);
+	        return count;
+	    }*/
+    
+    
+-----------------------------------------------------------------------------
+ 
+ empid 	empname		dept	rank
+
+rank:
+
+	A--> Acced
+	B-->Meets
+	C-->below
+	D-->very low	
+	
+	
+	
+	
+	
+	
+	
+	
+	----------------------------------------------------------------
+	
+	
+	@PostMapping("leaveresponse/{emp_id}")
+	public String saveLeavesresponse(@PathVariable("emp_id") int empid, @RequestBody AdminsideLeaveBean aslb) {
+		// AdminsideLeaveBean aslb=new AdminsideLeaveBean();
+
+		LeaveBean lb = ld.getleavebyempid(empid);
+		System.out.println("Employee Id Got");
+
+		if (lb != null) {
+
+			aslb.setLeave_id(lb.getLeave_id());
+
+			aslb.setEmp_id(lb.getEmp_id());
+			aslb.setFirst_name(lb.getFirst_name());
+			aslb.setLast_name(lb.getLast_name());
+			aslb.setDepartment_name(lb.getDepartment_name());
+			aslb.setStart_date(lb.getStart_date());
+			aslb.setEnd_date(lb.getEnd_date());
+			aslb.setFull_day_leave(lb.getFull_day_leave());
+			aslb.setHalf_day_leave(lb.getHalf_day_leave());
+			aslb.setMedical_leave(lb.getMedical_leave());
+			// aslb.setIsapproved(true);
+
+			ld.saveLeaveresponse(aslb);
+			return "save request";
+		} else {
+			return "Employee Not Found!";
+		}
+	}
+	
+	
+	
+-------------------------------------------------------------------------------------------
+
+
+	@PostMapping("leaveresponse/{leave_id}")
+	public String saveLeavesresponse(@PathVariable("leave_id") int leaveid, @RequestBody AdminsideLeaveBean aslb) {
+		// AdminsideLeaveBean aslb=new AdminsideLeaveBean();
+
+		LeaveBean lb = ld.getleavebyempid(leaveid);
+		System.out.println("Employee Id Got");
+
+		if (lb != null) {
+
+			aslb.setLeave_id(lb.getLeave_id());
+
+			aslb.setEmp_id(lb.getEmp_id());
+			aslb.setFirst_name(lb.getFirst_name());
+			aslb.setLast_name(lb.getLast_name());
+			aslb.setDepartment_name(lb.getDepartment_name());
+			aslb.setStart_date(lb.getStart_date());
+			aslb.setEnd_date(lb.getEnd_date());
+			aslb.setFull_day_leave(lb.getFull_day_leave());
+			aslb.setHalf_day_leave(lb.getHalf_day_leave());
+			aslb.setMedical_leave(lb.getMedical_leave());
+			// aslb.setIsapproved(true);
+
+			ld.saveLeaveresponse(aslb);
+			return "save request";
+		} else {
+			return "Employee Not Found!";
+		}
+	}	
+	
+	
+-----------------------------------------------------------------------
+
+@PostMapping("peremptotalleaves/{emp_id}")
+	public String saveTotalLeaves(@PathVariable("emp_id") int empid) {
+		// AdminsideLeaveBean aslb=new AdminsideLeaveBean();
+
+		// LeaveBean lb = ld.getleavebyempid(empid);
+
+		TotalLeavesofEmp tle = new TotalLeavesofEmp();
+		List<AdminsideLeaveBean> aslb = ld.gettotalLeavebyempid(empid);
+		System.out.println("Employee Id Got");
+
+		if (aslb.size() > 0) {
+
+			for (AdminsideLeaveBean adminsideLeaveBean : aslb) {
+				tle.setEmp_id(adminsideLeaveBean.getEmp_id());
+				tle.setLeave_id( adminsideLeaveBean.getLeave_id());
+
+				// Integer i=ld.getfulldayLeave();
+
+				Integer fl = ld.getfulldayleaveperemp(empid);
+
+				tle.setFull_day_leave(fl);
+
+				System.out.println(fl);
+
+				Integer hl = ld.gethalfdayleaveperemp(empid);
+
+				tle.setHalf_day_leave(hl);
+
+				Integer ml = ld.getmedicalleaveperemp(empid);
+
+				tle.setMedical_leave(ml);
+
+				double totalleave = fl + hl + ml;
+
+				tle.setTotal_leave(totalleave);
+
+			}
+
+			ld.savetotalleaveperemp(tle);
+
+			return "save request";
+		} else {
+			return "Employee Not Found!";
+		}
+	}
+	

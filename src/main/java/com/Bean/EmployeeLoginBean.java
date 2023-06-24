@@ -6,15 +6,17 @@ public class EmployeeLoginBean {
 	private String email;
 	private String password;
 	private Integer emp_id;
-	
+
 	private String token;
-	
+
 	private boolean status;
 	private String first_name;
 	private String last_name;
 	private String login_time;
 	private String logout_time;
-	
+
+	private String month;
+	private Integer year;
 	public String getEmail() {
 		return email;
 	}
@@ -46,8 +48,6 @@ public class EmployeeLoginBean {
 	public void setStatus(boolean status) {
 		this.status = status;
 	}
-
-	
 
 	public String getFirst_name() {
 		return first_name;
@@ -96,10 +96,22 @@ public class EmployeeLoginBean {
 	public String setLogout_time(String logout_time) {
 		return this.logout_time = logout_time;
 	}
-	
-	
-	
-	
+
+	public String getMonth() {
+		return month;
+	}
+
+	public void setMonth(String month) {
+		this.month = month;
+	}
+
+	public Integer getYear() {
+		return year;
+	}
+
+	public void setYear(Integer year) {
+		this.year = year;
+	}
 	
 
 }
