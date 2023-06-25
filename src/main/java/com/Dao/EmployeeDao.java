@@ -8,6 +8,7 @@ import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
+import com.Bean.AttendanceBean;
 import com.Bean.EmployeeBean;
 import com.Bean.EmployeeLoginBean;
 
@@ -163,4 +164,29 @@ public class EmployeeDao {
 		System.out.println("Password Updated");
 	}
 
+	
+	
+	public EmployeeLoginBean getemployeeloginbyid(int employeeid) {
+		return stmt.queryForObject("select * from emp_login where emp_id=?",
+				new BeanPropertyRowMapper<EmployeeLoginBean>(EmployeeLoginBean.class), new Object[] { employeeid });
+		
+	
+	}
+
+	public void saveAttendance(AttendanceBean atb) {
+		stmt.update(
+				"insert into attendance (emp_id,login_time,logout_time,total_working_hours,month) values (?,?,?,?,?)",
+				atb.getEmp_id(),atb.getLogin_time(),atb.getLogout_time(),atb.getTotal_working_hours(),atb.getMonth());
+		
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 }

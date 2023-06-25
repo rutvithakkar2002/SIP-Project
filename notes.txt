@@ -347,3 +347,55 @@ rank:
 		}
 	}
 	
+	
+	
+	
+	
+	
+	
+--------------------------------------------------------------------------------------------------
+	
+SELECT * FROM leave WHERE NOT EXISTS (SELECT * FROM leave_admin WHERE leave.leave_id = leave_admin.leave_id);	
+	
+	
+	
+leave id 26-----medical leave -2 -11 thi 13
+approved
+levae id 27 ----''------------------..---..
+save request..
+
+leave id -26   medical leave ---2 day---11/08/23 thi 13/08/23-----approved
+aa 25/07/23
+leave id -27   medical leave ---2 day---11/08/23 thi 13/08/23
+
+	
+------------------------------------------------------------------------------------------------------
+
+public class Example {
+    public static void main(String[] args){
+        String str = "abc \t defg hi   jklm";
+        String parts[] = str.split("\\s+");
+        for(String part: parts) {
+            System.out.println(part);
+        }
+    }
+}
+
+
+
+
+
+
+public class SplitExample{  
+public static void main(String args[]){  
+String s1="java string split method by javatpoint";  
+String[] words=s1.split("\\s");//splits the string based on whitespace  
+//using java foreach loop to print elements of string array  
+for(String w:words){  
+System.out.println(w);  
+}  
+}}  
+	
+	
+	
+	

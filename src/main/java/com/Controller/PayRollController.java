@@ -46,10 +46,15 @@ public class PayRollController {
 
 			double hra = ((prb.getBasic_salary() + da) * 30) / 100;
 			prb.setHra(hra);
-
+			
+			
+			
 			double total_salary = prb.getBasic_salary() + da + hra;
 			prb.setTotal_salary(total_salary);
 
+			
+			
+			
 			payrollDao.savepayslip(prb);
 
 			return "request inserted";

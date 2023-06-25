@@ -119,16 +119,21 @@ public class LeaveController {
 			aslb.setHalf_day_leave(lb.getHalf_day_leave());
 			aslb.setMedical_leave(lb.getMedical_leave());
 			// aslb.setIsapproved(true);
-			
-			if(aslb.isIsapproved()==true)
+			ld.saveLeaveresponse(aslb);
+			return "save request";
+		/*	if(aslb.isIsapproved()==true)
 			{
 				return "already approved";
+			}
+			else if(aslb.isIsapproved()==false) {
+				
+				return "already rejected!";
 			}
 			else
 			{
 				ld.saveLeaveresponse(aslb);
 				return "save request";
-			}
+			}*/
 		} 
 		else 
 		{

@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.Bean.AttendanceBean;
 import com.Bean.BasicSalaryBean;
 import com.Bean.EmployeeBean;
 import com.Bean.EmployeeLoginBean;
@@ -83,9 +84,9 @@ public class EmployeeController {
 				|| emp.getDepartment_name().toUpperCase().equals("ITSERVICE")
 				|| emp.getDepartment_name().toUpperCase().equals("PRODUCTION")
 				|| emp.getDepartment_name().toUpperCase().equals("MANUFACTURING")) {
-			
+
 			emp.setStatus(true);
-			
+
 			employeeDao.saveEmployee(emp);
 
 			System.out.println("Employee inserted!");
@@ -326,6 +327,57 @@ public class EmployeeController {
 			System.out.println("employee not found!!");
 		}
 		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(fdto);
+	}
+
+	@PostMapping("/employeeattendance/{emp_id}")
+	public EmployeeLoginBean empAttendance(@PathVariable("emp_id") int empid) throws Exception {
+
+		AttendanceBean atb = new AttendanceBean();
+
+		EmployeeLoginBean emp = employeeDao.getemployeeloginbyid(empid);
+		System.out.println("Employee Got");
+
+		atb.setEmp_id(emp.getEmp_id());
+		String t1 = atb.setLogin_time(emp.getLogin_time());
+		String t2 = atb.setLogout_time(emp.getLogout_time());
+		atb.setMonth(emp.getMonth());
+
+		String s1 = t1;
+		String s2 = t2;
+		String[] words1 = s1.split("\\s");// splits the string based on whitespace
+		String[] words2 = s2.split("\\s");
+		// using java foreach loop to print elements of string array
+		String w1 = words1[1];// logintime
+		String w2 = words2[1];// logouttime
+
+		System.out.println(w1);
+		System.out.println(w2);
+
+		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("HH:mm:ss");
+		Date date1 = simpleDateFormat.parse(w1);
+		Date date2 = simpleDateFormat.parse(w2);
+
+		// Calculating the difference in milliseconds
+		long differenceInMilliSeconds = Math.abs(date2.getTime() - date1.getTime());
+
+		// Calculating the difference in Hours
+		long differenceInHours = (differenceInMilliSeconds / (60 * 60 * 1000)) % 24;
+
+		// Calculating the difference in Minutes
+		long differenceInMinutes = (differenceInMilliSeconds / (60 * 1000)) % 60;
+
+		// Calculating the difference in Seconds
+		long differenceInSeconds = (differenceInMilliSeconds / 1000) % 60;
+
+		System.out.println("Difference is " + differenceInHours + " hours " + differenceInMinutes + " minutes "
+				+ differenceInSeconds + " Seconds. ");
+
+		
+		atb.setTotal_working_hours(differenceInHours+":"+differenceInMinutes+":"+differenceInSeconds);
+		
+		employeeDao.saveAttendance(atb);
+
+		return emp;
 	}
 
 	/*

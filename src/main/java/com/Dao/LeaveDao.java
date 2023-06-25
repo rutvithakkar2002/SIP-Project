@@ -57,9 +57,15 @@ public class LeaveDao {
 	 * , new BeanPropertyRowMapper<LeaveBean>(LeaveBean.class)); }
 	 */
 
-	public List<LeaveBean> getAllLeavesadmin() {
+/*	public List<LeaveBean> getAllLeavesadmin() {
 		return stmt.query("select * from leave", new BeanPropertyRowMapper<LeaveBean>(LeaveBean.class));
+	}*/
+	
+
+	public List<LeaveBean> getAllLeavesadmin() {
+		return stmt.query("SELECT * FROM leave WHERE NOT EXISTS (SELECT * FROM leave_admin WHERE leave.leave_id = leave_admin.leave_id)", new BeanPropertyRowMapper<LeaveBean>(LeaveBean.class));
 	}
+	
 
 	public void saveleaveinemployeeside(AdminsideLeaveBean aslb) {
 		// TODO Auto-generated method stub
