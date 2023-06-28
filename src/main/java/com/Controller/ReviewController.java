@@ -1,5 +1,8 @@
 package com.Controller;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -11,6 +14,7 @@ import com.Bean.ReviewBean;
 
 import com.Dao.EmployeeDao;
 import com.Dao.ReviewDao;
+
 @RestController
 public class ReviewController {
 
@@ -19,7 +23,7 @@ public class ReviewController {
 
 	@Autowired
 	ReviewDao reviewDao;
-	
+
 	@PostMapping("reviewofemp/{emp_id}")
 	public String saveReviews(@PathVariable("emp_id") int empid, @RequestBody ReviewBean rb) {
 
@@ -33,6 +37,13 @@ public class ReviewController {
 			rb.setLast_name(eb.getLast_name());
 			rb.setDepartment_name(eb.getDepartment_name());
 			
+			 DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy");  
+			 LocalDateTime now = LocalDateTime.now();  
+			 System.out.println(dtf.format(now));  
+			
+			
+			
+			rb.setDateofreview(dtf.format(now));
 			reviewDao.savereview(rb);
 		}
 		else

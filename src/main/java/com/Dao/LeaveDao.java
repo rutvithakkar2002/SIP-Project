@@ -10,6 +10,7 @@ import org.springframework.stereotype.Repository;
 import com.Bean.AdminsideLeaveBean;
 
 import com.Bean.LeaveBean;
+
 import com.Bean.TotalLeavesofEmp;
 
 @Repository
@@ -57,15 +58,17 @@ public class LeaveDao {
 	 * , new BeanPropertyRowMapper<LeaveBean>(LeaveBean.class)); }
 	 */
 
-/*	public List<LeaveBean> getAllLeavesadmin() {
-		return stmt.query("select * from leave", new BeanPropertyRowMapper<LeaveBean>(LeaveBean.class));
-	}*/
-	
+	/*
+	 * public List<LeaveBean> getAllLeavesadmin() { return
+	 * stmt.query("select * from leave", new
+	 * BeanPropertyRowMapper<LeaveBean>(LeaveBean.class)); }
+	 */
 
 	public List<LeaveBean> getAllLeavesadmin() {
-		return stmt.query("SELECT * FROM leave WHERE NOT EXISTS (SELECT * FROM leave_admin WHERE leave.leave_id = leave_admin.leave_id)", new BeanPropertyRowMapper<LeaveBean>(LeaveBean.class));
+		return stmt.query(
+				"SELECT * FROM leave WHERE NOT EXISTS (SELECT * FROM leave_admin WHERE leave.leave_id = leave_admin.leave_id)",
+				new BeanPropertyRowMapper<LeaveBean>(LeaveBean.class));
 	}
-	
 
 	public void saveleaveinemployeeside(AdminsideLeaveBean aslb) {
 		// TODO Auto-generated method stub
@@ -99,7 +102,7 @@ public class LeaveDao {
 
 	public List<AdminsideLeaveBean> gettotalLeavebyempid(int empid) {
 		System.out.println("Hey i m here dear vidhi");
-		return  stmt.query("select * from leave_admin where emp_id=?",
+		return stmt.query("select * from leave_admin where emp_id=?",
 				new BeanPropertyRowMapper<AdminsideLeaveBean>(AdminsideLeaveBean.class), new Object[] { empid });
 
 	}
@@ -136,31 +139,73 @@ public class LeaveDao {
 	 */
 
 	public Integer gethalfdayleaveperemp(int empid) {
-		Integer hl = (Integer) stmt.queryForObject("select SUM(half_day_leave) from leave_admin where emp_id=? and 1=1 group by emp_id",
+		Integer hl = (Integer) stmt.queryForObject(
+				"select SUM(half_day_leave) from leave_admin where emp_id=? and 1=1 group by emp_id",
 				new Object[] { empid }, Integer.class);
 		return hl;
 
 	}
 
 	public Integer getfulldayleaveperemp(int empid) {
-		Integer fl = (Integer) stmt.queryForObject("select SUM(full_day_leave) from leave_admin where emp_id=? and 1=1 group by emp_id",
+		Integer fl = (Integer) stmt.queryForObject(
+				"select SUM(full_day_leave) from leave_admin where emp_id=? and 1=1 group by emp_id",
 				new Object[] { empid }, Integer.class);
 		return fl;
 
 	}
 
 	public Integer getmedicalleaveperemp(int empid) {
-		Integer ml = (Integer) stmt.queryForObject("select SUM(medical_leave) from leave_admin where emp_id=? and 1=1 group by emp_id",
+		Integer ml = (Integer) stmt.queryForObject(
+				"select SUM(medical_leave) from leave_admin where emp_id=? and 1=1 group by emp_id",
 				new Object[] { empid }, Integer.class);
 		return ml;
 
 	}
 
-/*	public List<AdminsideLeaveBean> gettotalLeavebyleaveid(int leaveid) {
-		System.out.println("Hey i m here dear vidhi");
-		return  stmt.query("select * from leave_admin where leave_id=?",
-				new BeanPropertyRowMapper<AdminsideLeaveBean>(AdminsideLeaveBean.class), new Object[] { leaveid });
+	public TotalLeavesofEmp getemployeebyid(int employeeid) {
+		return stmt.queryForObject("select * from totalleaveofemp where emp_id=? and 1=1 group by emp_id",
+				new BeanPropertyRowMapper<TotalLeavesofEmp>(TotalLeavesofEmp.class), new Object[] { employeeid });
 
-	}*/
+	}
+
+	public int getmaxleaveperemp(int employeeid) {
+		Integer cnt = (Integer) stmt.queryForObject(
+				"select MAX(total_leave) from totalleaveofemp where emp_id=? and 1=1 group by emp_id",
+				new Object[] { employeeid }, Integer.class);
+		return cnt;
+
+	}
+
+
+	public TotalLeavesofEmp getempbyempidtl(int empid) {
+
+		return stmt.queryForObject("select * from totalleaveofemp where emp_id=?",
+				new BeanPropertyRowMapper<TotalLeavesofEmp>(TotalLeavesofEmp.class), new Object[] { empid });
+
+	}
+
+	public void updatetotalleave(TotalLeavesofEmp tloe) {
+		stmt.update(
+				"update totalleaveofemp set full_day_leave=?,half_day_leave=?,medical_leave=?,total_leave=? where emp_id=?",
+				tloe.getFull_day_leave(), tloe.getHalf_day_leave(), tloe.getMedical_leave(),tloe.getTotal_leave(), tloe.getEmp_id());
+	}
+
+	public TotalLeavesofEmp getemployeebyidfromtotalleave(int empid) {
+
+		return stmt.queryForObject("select * from totalleaveofemp where emp_id=?",
+				new BeanPropertyRowMapper<TotalLeavesofEmp>(TotalLeavesofEmp.class), new Object[] { empid });
+
+		
+	}
+
+	/*
+	 * public List<AdminsideLeaveBean> gettotalLeavebyleaveid(int leaveid) {
+	 * System.out.println("Hey i m here dear vidhi"); return
+	 * stmt.query("select * from leave_admin where leave_id=?", new
+	 * BeanPropertyRowMapper<AdminsideLeaveBean>(AdminsideLeaveBean.class), new
+	 * Object[] { leaveid });
+	 * 
+	 * }
+	 */
 
 }

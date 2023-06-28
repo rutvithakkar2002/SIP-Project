@@ -397,5 +397,8 @@ System.out.println(w);
 }}  
 	
 	
-	
+---------------------------------------------------------------------------
+for getting maximum from total_leave------------------
+
+select max(total_leave) as "leaveperemp" from totalleaveofemp where emp_id=37;	
 	

@@ -242,25 +242,25 @@ public class EmployeeController {
 	}
 
 	// Update Employee
-	/*
-	 * @PutMapping("/employee") public EmployeeBean updateEmployee(@RequestBody
-	 * EmployeeBean employee) {
-	 * 
-	 * System.out.println(employee.getFirst_name());
-	 * System.out.println(employee.getLast_name());
-	 * System.out.println(employee.getEmail());
-	 * System.out.println(employee.getPassword());
-	 * 
-	 * employeeDao.updateEmployee(employee);
-	 * 
-	 * System.out.println("employee Updated..");
-	 * 
-	 * return employee;// object json
-	 * 
-	 * }
-	 */
 
 	@PutMapping("/employee/{emp_id}")
+	public EmployeeBean updateEmployee(@PathVariable("emp_id") int empid) {
+
+	
+		EmployeeBean empbean = employeeDao.getemployeebyid(empid);
+
+		if (empbean != null) {
+			System.out.println("Employee got");
+			employeeDao.updateEmployee(empbean);
+			System.out.println("Employee updated");
+		} else {
+			System.out.println("employee not found..");
+
+		}
+		return empbean;
+	}
+
+/*	@PutMapping("/employee/{emp_id}")
 	public EmployeeBean updateEmployee(@PathVariable("emp_id") int empid, @RequestBody EmployeeBean employee) {
 
 		EmployeeBean emp = employeeDao.getemployeebyid(empid);
@@ -276,7 +276,7 @@ public class EmployeeController {
 
 		return employee;// object json
 
-	}
+	}*/
 
 	// Forgot Password
 
@@ -364,17 +364,17 @@ public class EmployeeController {
 		long differenceInHours = (differenceInMilliSeconds / (60 * 60 * 1000)) % 24;
 
 		// Calculating the difference in Minutes
-		long differenceInMinutes = (differenceInMilliSeconds / (60 * 1000)) % 60;
+		// long differenceInMinutes = (differenceInMilliSeconds / (60 * 1000)) % 60;
 
 		// Calculating the difference in Seconds
-		long differenceInSeconds = (differenceInMilliSeconds / 1000) % 60;
+		// long differenceInSeconds = (differenceInMilliSeconds / 1000) % 60;
 
-		System.out.println("Difference is " + differenceInHours + " hours " + differenceInMinutes + " minutes "
-				+ differenceInSeconds + " Seconds. ");
+		System.out.println("Difference is " + differenceInHours + " hours ");
 
-		
-		atb.setTotal_working_hours(differenceInHours+":"+differenceInMinutes+":"+differenceInSeconds);
-		
+		String differenceInHours1 = Long.toString(differenceInHours);
+
+		atb.setTotal_working_hours(differenceInHours1);
+
 		employeeDao.saveAttendance(atb);
 
 		return emp;

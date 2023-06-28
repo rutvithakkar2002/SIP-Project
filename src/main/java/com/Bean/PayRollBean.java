@@ -8,13 +8,13 @@ public class PayRollBean {
 	private String last_name;
 	private String department_name;
 	private double basic_salary;
-//	private double total_deduction;
-	// private double net_salary;
 	private double da;
 	private double hra;
 	private double total_salary;
-	// private double pf;
-//	private double total_leaves;
+	private double pf;
+	private double total_leaves;
+	private double total_deduction;
+	private double net_salary;
 
 	public Integer getPayroll_id() {
 		return payroll_id;
@@ -88,4 +88,37 @@ public class PayRollBean {
 		this.total_salary = total_salary;
 	}
 
+	public double getPf() {
+		return pf;
+	}
+
+	public void setPf(double pf) {
+		this.pf = pf;
+	}
+
+	public double getTotal_leaves() {
+		return total_leaves;
+	}
+
+	public void setTotal_leaves(double total_leaves) {
+		this.total_leaves = total_leaves;
+	}
+
+	public double getTotal_deduction() {
+		return total_deduction;
+	}
+
+	public void setTotal_deduction(double total_deduction) {
+		this.total_deduction = total_deduction;
+	}
+
+	public double getNet_salary() {
+		return net_salary;
+	}
+
+	public void setNet_salary(double net_salary) {
+		this.net_salary = net_salary;
+	}
+	
+	
 }

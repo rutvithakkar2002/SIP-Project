@@ -1,6 +1,6 @@
 package com.Controller;
 
-import java.util.Iterator;
+
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -73,6 +74,8 @@ public class LeaveController {
 		 */
 	}
 
+	
+	//employeeside
 	@DeleteMapping("/leaves/{emp_id}")
 	public String deleteLeave(@PathVariable("emp_id") int employeeid) {
 
@@ -89,6 +92,25 @@ public class LeaveController {
 		// return employees;
 
 	}
+	
+	@PutMapping("/updateleave/{emp_id}")
+	public String updateLeave(@PathVariable("emp_id") int employeeid)
+	{
+		
+		
+		
+		//ld.updateEmployeeleave();
+		
+		
+		return "";
+		
+	}
+	
+	
+	
+	
+	
+	
 
 	@GetMapping("/adminsideallleaves")
 	public List<LeaveBean> getAllLeavesadminside() {
@@ -178,6 +200,8 @@ public class LeaveController {
 
 		if (aslb.size() > 0) {
 
+			TotalLeavesofEmp tloe= ld.getempbyempidtl(empid);
+			
 			for (AdminsideLeaveBean adminsideLeaveBean : aslb) {
 				tle.setEmp_id(adminsideLeaveBean.getEmp_id());
 				tle.setLeave_id(adminsideLeaveBean.getLeave_id());
@@ -203,8 +227,19 @@ public class LeaveController {
 				tle.setTotal_leave(totalleave);
 
 			}
+			
+			if(tloe==null)
+			{
+				ld.savetotalleaveperemp(tle);
+			} else {
+				tloe.setFull_day_leave(tle.getFull_day_leave());
+				tloe.setHalf_day_leave(tle.getHalf_day_leave());
+				tloe.setMedical_leave(tle.getMedical_leave());
+				tloe.setTotal_leave(tle.getTotal_leave());
+				ld.updatetotalleave(tloe);
+			}
 
-			ld.savetotalleaveperemp(tle);
+			
 
 			return "save request";
 		} else {

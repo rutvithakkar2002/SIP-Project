@@ -14,8 +14,8 @@ public class ReviewDao {
 
 	public void savereview(ReviewBean rb) {
 		stmt.update(
-				"insert into review(emp_id,first_name,last_name,department_name,rank )values(?,?,?,?,?)",
-				rb.getEmp_id(),rb.getFirst_name(),rb.getLast_name(),rb.getDepartment_name(),rb.getRank());
+				"insert into review(emp_id,first_name,last_name,department_name,dateofreview,rank,description )values(?,?,?,?,?,?,?)",
+				rb.getEmp_id(),rb.getFirst_name(),rb.getLast_name(),rb.getDepartment_name(),rb.getDateofreview(),rb.getRank(),rb.getDescription());
 	}
 	
 	

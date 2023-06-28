@@ -23,7 +23,7 @@ public class EmployeeDao {
 				"insert into employee (first_name,last_name,gender,age,contact_no,email,address,city,state,pincode,joining_date,department_name,password,status) values (?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
 				emp.getFirst_name(), emp.getLast_name(), emp.getGender(), emp.getAge(), emp.getContact_no(),
 				emp.getEmail(), emp.getAddress(), emp.getCity(), emp.getState(), emp.getPincode(),
-				emp.getJoining_date(), emp.getDepartment_name(), emp.getPassword(),emp.isStatus());
+				emp.getJoining_date(), emp.getDepartment_name(), emp.getPassword(), emp.isStatus());
 	}
 
 	// this will check original employee table
@@ -60,23 +60,18 @@ public class EmployeeDao {
 	public EmployeeBean getemployeebyid(int employeeid) {
 		return stmt.queryForObject("select * from employee where emp_id=?",
 				new BeanPropertyRowMapper<EmployeeBean>(EmployeeBean.class), new Object[] { employeeid });
-		
-	
+
 	}
 
-	public boolean updateEmployee(EmployeeBean employee) {
+	public void updateEmployee(EmployeeBean employee) {
 
-		int i = stmt.update(
-				"update employee set first_name=?,last_name=?,gender=?,age=?,contact_no=?,email=?,address=?,city=?,state=?,pincode=?,department_name=?,password=?",
+		stmt.update(
+				"update employee set first_name=?,last_name=?,gender=?,age=?,contact_no=?,email=?,address=?,city=?,state=?,pincode=?,department_name=?,password=? where emp_id=?",
 				employee.getFirst_name(), employee.getLast_name(), employee.getGender(), employee.getAge(),
 				employee.getContact_no(), employee.getEmail(), employee.getAddress(), employee.getCity(),
-				employee.getState(), employee.getPincode(), employee.getDepartment_name(), employee.getPassword());
-
-		if (i == 1) {
-			return true;
-		} else {
-			return false;
-		}
+				employee.getState(), employee.getPincode(), employee.getDepartment_name(), employee.getPassword(),
+				employee.getEmp_id());
+		System.out.println("Employee updated");
 	}
 
 	// this will check original employee table
@@ -104,7 +99,7 @@ public class EmployeeDao {
 		stmt.update(
 				"insert into emp_login(emp_id,first_name,last_name,status,login_time,email,password,token,logout_time,month,year) values (?,?,?,?,?,?,?,?,?,?,?)",
 				emp.getEmp_id(), emp.getFirst_name(), emp.getLast_name(), emp.isStatus(), emp.getLogin_time(),
-				emp.getEmail(), emp.getPassword(), emp.getToken(), emp.getLogout_time(),emp.getMonth(),emp.getYear());
+				emp.getEmail(), emp.getPassword(), emp.getToken(), emp.getLogout_time(), emp.getMonth(), emp.getYear());
 	}
 
 	// This will check in emplogin table
@@ -164,29 +159,18 @@ public class EmployeeDao {
 		System.out.println("Password Updated");
 	}
 
-	
-	
 	public EmployeeLoginBean getemployeeloginbyid(int employeeid) {
 		return stmt.queryForObject("select * from emp_login where emp_id=?",
 				new BeanPropertyRowMapper<EmployeeLoginBean>(EmployeeLoginBean.class), new Object[] { employeeid });
-		
-	
+
 	}
 
 	public void saveAttendance(AttendanceBean atb) {
 		stmt.update(
 				"insert into attendance (emp_id,login_time,logout_time,total_working_hours,month) values (?,?,?,?,?)",
-				atb.getEmp_id(),atb.getLogin_time(),atb.getLogout_time(),atb.getTotal_working_hours(),atb.getMonth());
-		
+				atb.getEmp_id(), atb.getLogin_time(), atb.getLogout_time(), atb.getTotal_working_hours(),
+				atb.getMonth());
+
 	}
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
+
 }
