@@ -14,6 +14,8 @@ public class LeaveBean {
 	private String start_date;
 	private String end_date;
 	private double total_leave;
+	private String month;
+	private String leave_description;
 	// private boolean isapproved;
 
 	public Integer getEmp_id() {
@@ -103,6 +105,23 @@ public class LeaveBean {
 	public void setTotal_leave(double total_leave) {
 		this.total_leave = total_leave;
 	}
+
+	public String getMonth() {
+		return month;
+	}
+
+	public void setMonth(String month) {
+		this.month = month;
+	}
+
+	public String getLeave_description() {
+		return leave_description;
+	}
+
+	public void setLeave_description(String leave_description) {
+		this.leave_description = leave_description;
+	}
+	
 
 	/*
 	 * public boolean isIsapproved() { return isapproved; } public void

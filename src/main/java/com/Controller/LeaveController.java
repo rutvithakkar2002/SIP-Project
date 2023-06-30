@@ -1,10 +1,13 @@
 package com.Controller;
 
-
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -16,6 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.Bean.AdminsideLeaveBean;
 import com.Bean.EmployeeBean;
 import com.Bean.LeaveBean;
+import com.Bean.ReviewBean;
 import com.Bean.TotalLeavesofEmp;
 import com.Dao.EmployeeDao;
 import com.Dao.LeaveDao;
@@ -49,6 +53,13 @@ public class LeaveController {
 		// total_leave=lb.getFull_day_leave()+lb.getHalf_day_leave()+lb.getMedical_leave();
 		// lb.setTotal_leave(total_leave);
 
+		SimpleDateFormat simpleformat = new SimpleDateFormat("E, dd MMM yyyy HH:mm:ss");
+		simpleformat = new SimpleDateFormat("MMMM");
+		String currentMonth = simpleformat.format(new Date());
+		System.out.println("Month in MMMM format = " + currentMonth);
+
+		lb.setMonth(currentMonth);
+
 		ld.saveleave(lb);
 
 		System.out.println("leave type inserted!");
@@ -74,8 +85,7 @@ public class LeaveController {
 		 */
 	}
 
-	
-	//employeeside
+	// employeeside
 	@DeleteMapping("/leaves/{emp_id}")
 	public String deleteLeave(@PathVariable("emp_id") int employeeid) {
 
@@ -92,25 +102,121 @@ public class LeaveController {
 		// return employees;
 
 	}
-	
+
 	@PutMapping("/updateleave/{emp_id}")
-	public String updateLeave(@PathVariable("emp_id") int employeeid)
-	{
-		
-		
-		
-		//ld.updateEmployeeleave();
-		
-		
+	public String updateLeave(@PathVariable("emp_id") int employeeid) {
+
+		// ld.updateEmployeeleave();
+
 		return "";
-		
+
 	}
-	
-	
-	
-	
-	
-	
+
+	@GetMapping("/viewleaveofemp/{emp_id}")
+	public ResponseEntity<List<LeaveBean>> getleavebyempid(@PathVariable("emp_id") int empid) {
+		List<LeaveBean> lb = ld.getLeavebyEmpid(empid);
+
+		for (LeaveBean leaveBean : lb) {
+
+			leaveBean.getLeave_id();
+			leaveBean.getEmp_id();
+			leaveBean.getFirst_name();
+			leaveBean.getLast_name();
+			leaveBean.getDepartment_name();
+			leaveBean.getFull_day_leave();
+			leaveBean.getHalf_day_leave();
+			leaveBean.getMedical_leave();
+			leaveBean.getStart_date();
+			leaveBean.getEnd_date();
+			leaveBean.getMonth();
+			leaveBean.getLeave_description();
+		}
+
+		return new ResponseEntity<List<LeaveBean>>(lb, HttpStatus.OK);
+
+	}
+
+	@GetMapping("/viewleaveofempmonthly/{emp_id}/{month}")
+	public ResponseEntity<List<LeaveBean>> getleavebyempidmonthwise(@PathVariable("emp_id") int empid,
+			@PathVariable("month") String month) {
+		System.out.println("I am here");
+		List<LeaveBean> lb = ld.getLeavebyEmpidMonthwise(empid, month);
+
+		for (LeaveBean leaveBean : lb) {
+
+			leaveBean.getLeave_id();
+			leaveBean.getEmp_id();
+			leaveBean.getFirst_name();
+			leaveBean.getLast_name();
+			leaveBean.getDepartment_name();
+			leaveBean.getFull_day_leave();
+			leaveBean.getHalf_day_leave();
+			leaveBean.getMedical_leave();
+			leaveBean.getStart_date();
+			leaveBean.getEnd_date();
+			leaveBean.getMonth();
+			leaveBean.getLeave_description();
+		}
+
+		return new ResponseEntity<List<LeaveBean>>(lb, HttpStatus.OK);
+
+	}
+
+	@GetMapping("/viewapprovedorrejectedleaveofemp/{emp_id}")
+	public ResponseEntity<List<AdminsideLeaveBean>> getaorrleavebyempid(@PathVariable("emp_id") int empid) {
+		List<AdminsideLeaveBean> aslb = ld.getaorrLeavebyEmpid(empid);
+
+		for (AdminsideLeaveBean adminsideLeaveBean : aslb) {
+
+			adminsideLeaveBean.getResponse_id();
+			adminsideLeaveBean.getLeave_id();
+			adminsideLeaveBean.getEmp_id();
+			adminsideLeaveBean.getFirst_name();
+			adminsideLeaveBean.getLast_name();
+			adminsideLeaveBean.getDepartment_name();
+			adminsideLeaveBean.getFull_day_leave();
+			adminsideLeaveBean.getHalf_day_leave();
+			adminsideLeaveBean.getMedical_leave();
+			adminsideLeaveBean.getStart_date();
+			adminsideLeaveBean.getEnd_date();
+			adminsideLeaveBean.getMonth();
+			adminsideLeaveBean.getLeave_description();
+			adminsideLeaveBean.isIsapproved();
+
+		}
+
+		return new ResponseEntity<List<AdminsideLeaveBean>>(aslb, HttpStatus.OK);
+
+	}
+
+	@GetMapping("/viewaorrleaveofempmonthly/{emp_id}/{month}")
+	public ResponseEntity<List<AdminsideLeaveBean>> getleaveaorrbyempidmonthwise(@PathVariable("emp_id") int empid,
+			@PathVariable("month") String month) {
+		System.out.println("I am here");
+
+		List<AdminsideLeaveBean> aslb = ld.getaorrLeavebyEmpidMonthwise(empid, month);
+
+		for (AdminsideLeaveBean adminsideLeaveBean : aslb) {
+
+			adminsideLeaveBean.getResponse_id();
+			adminsideLeaveBean.getLeave_id();
+			adminsideLeaveBean.getEmp_id();
+			adminsideLeaveBean.getFirst_name();
+			adminsideLeaveBean.getLast_name();
+			adminsideLeaveBean.getDepartment_name();
+			adminsideLeaveBean.getFull_day_leave();
+			adminsideLeaveBean.getHalf_day_leave();
+			adminsideLeaveBean.getMedical_leave();
+			adminsideLeaveBean.getStart_date();
+			adminsideLeaveBean.getEnd_date();
+			adminsideLeaveBean.getMonth();
+			adminsideLeaveBean.getLeave_description();
+			adminsideLeaveBean.isIsapproved();
+
+		}
+
+		return new ResponseEntity<List<AdminsideLeaveBean>>(aslb, HttpStatus.OK);
+	}
 
 	@GetMapping("/adminsideallleaves")
 	public List<LeaveBean> getAllLeavesadminside() {
@@ -140,25 +246,20 @@ public class LeaveController {
 			aslb.setFull_day_leave(lb.getFull_day_leave());
 			aslb.setHalf_day_leave(lb.getHalf_day_leave());
 			aslb.setMedical_leave(lb.getMedical_leave());
+			aslb.setMonth(lb.getMonth());
+			aslb.setLeave_description(lb.getLeave_description());
+
 			// aslb.setIsapproved(true);
 			ld.saveLeaveresponse(aslb);
 			return "save request";
-		/*	if(aslb.isIsapproved()==true)
-			{
-				return "already approved";
-			}
-			else if(aslb.isIsapproved()==false) {
-				
-				return "already rejected!";
-			}
-			else
-			{
-				ld.saveLeaveresponse(aslb);
-				return "save request";
-			}*/
-		} 
-		else 
-		{
+			/*
+			 * if(aslb.isIsapproved()==true) { return "already approved"; } else
+			 * if(aslb.isIsapproved()==false) {
+			 * 
+			 * return "already rejected!"; } else { ld.saveLeaveresponse(aslb); return
+			 * "save request"; }
+			 */
+		} else {
 			return "leave id Not Found!";
 		}
 	}
@@ -166,7 +267,7 @@ public class LeaveController {
 	@GetMapping("/approvedleaves")
 	public List<AdminsideLeaveBean> getAllapprovedLeavesempside() {
 		List<AdminsideLeaveBean> empsideapprovedleaves = ld.getAllapprovedLeaves();
-		System.out.println("ALL Approved Leaves are displayed at employee side");
+		System.out.println("ALL Approved Leaves are displayed at admin side");
 
 		return empsideapprovedleaves;
 	}
@@ -200,8 +301,8 @@ public class LeaveController {
 
 		if (aslb.size() > 0) {
 
-			TotalLeavesofEmp tloe= ld.getempbyempidtl(empid);
-			
+			TotalLeavesofEmp tloe = ld.getempbyempidtl(empid);
+
 			for (AdminsideLeaveBean adminsideLeaveBean : aslb) {
 				tle.setEmp_id(adminsideLeaveBean.getEmp_id());
 				tle.setLeave_id(adminsideLeaveBean.getLeave_id());
@@ -227,9 +328,8 @@ public class LeaveController {
 				tle.setTotal_leave(totalleave);
 
 			}
-			
-			if(tloe==null)
-			{
+
+			if (tloe == null) {
 				ld.savetotalleaveperemp(tle);
 			} else {
 				tloe.setFull_day_leave(tle.getFull_day_leave());
@@ -238,8 +338,6 @@ public class LeaveController {
 				tloe.setTotal_leave(tle.getTotal_leave());
 				ld.updatetotalleave(tloe);
 			}
-
-			
 
 			return "save request";
 		} else {

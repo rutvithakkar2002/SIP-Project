@@ -10,6 +10,7 @@ public class ReviewBean {
 	private String dateofreview;
 	private char rank;
 	private String description;
+	private String month;
 
 	public Integer getReview_id() {
 		return review_id;
@@ -74,5 +75,14 @@ public class ReviewBean {
 	public void setDescription(String description) {
 		this.description = description;
 	}
+
+	public String getMonth() {
+		return month;
+	}
+
+	public void setMonth(String month) {
+		this.month = month;
+	}
+	
 
 }

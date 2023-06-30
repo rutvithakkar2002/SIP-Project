@@ -10,7 +10,7 @@ import org.springframework.stereotype.Repository;
 import com.Bean.AdminsideLeaveBean;
 
 import com.Bean.LeaveBean;
-
+import com.Bean.ReviewBean;
 import com.Bean.TotalLeavesofEmp;
 
 @Repository
@@ -23,9 +23,9 @@ public class LeaveDao {
 		// TODO Auto-generated method stub
 		System.out.println("I am here");
 		stmt.update(
-				"insert into leave (emp_id,department_name,first_name,last_name,full_day_leave,half_day_leave,medical_leave,start_date,end_date) values (?,?,?,?,?,?,?,?,?)",
+				"insert into leave (emp_id,department_name,first_name,last_name,full_day_leave,half_day_leave,medical_leave,start_date,end_date,month,leave_description) values (?,?,?,?,?,?,?,?,?,?,?)",
 				lb.getEmp_id(), lb.getDepartment_name(), lb.getFirst_name(), lb.getLast_name(), lb.getFull_day_leave(),
-				lb.getHalf_day_leave(), lb.getMedical_leave(), lb.getStart_date(), lb.getEnd_date());
+				lb.getHalf_day_leave(), lb.getMedical_leave(), lb.getStart_date(), lb.getEnd_date(),lb.getMonth(),lb.getLeave_description());
 	}
 
 	public LeaveBean getleavebyid(int employeeid) {
@@ -88,10 +88,10 @@ public class LeaveDao {
 
 	public void saveLeaveresponse(AdminsideLeaveBean aslb) {
 		stmt.update(
-				"insert into leave_admin (leave_id,emp_id,department_name,first_name,last_name,full_day_leave,half_day_leave,medical_leave,start_date,end_date,isapproved ) values (?,?,?,?,?,?,?,?,?,?,?)",
+				"insert into leave_admin (leave_id,emp_id,department_name,first_name,last_name,full_day_leave,half_day_leave,medical_leave,start_date,end_date,month,leave_description,isapproved ) values (?,?,?,?,?,?,?,?,?,?,?,?,?)",
 				aslb.getLeave_id(), aslb.getEmp_id(), aslb.getDepartment_name(), aslb.getFirst_name(),
 				aslb.getLast_name(), aslb.getFull_day_leave(), aslb.getHalf_day_leave(), aslb.getMedical_leave(),
-				aslb.getStart_date(), aslb.getEnd_date(), aslb.isIsapproved());
+				aslb.getStart_date(), aslb.getEnd_date(),aslb.getMonth(),aslb.getLeave_description(),aslb.isIsapproved());
 
 	}
 
@@ -198,6 +198,35 @@ public class LeaveDao {
 		
 	}
 
+	
+	//all leaves per emp
+		public List<LeaveBean> getLeavebyEmpid(int empid) {
+			return stmt.query("select * from leave where emp_id=? and 1=1 group by leave_id",
+					new BeanPropertyRowMapper<LeaveBean>(LeaveBean.class), new Object[] { empid });
+
+		}
+		
+		
+		//monthwise leave employee can see
+		public List<LeaveBean> getLeavebyEmpidMonthwise(int empid, String month) {
+			return stmt.query("select *from leave where emp_id=? and month=?",
+					new BeanPropertyRowMapper<LeaveBean>(LeaveBean.class), new Object[] { empid, month });
+
+		}
+
+		public List<AdminsideLeaveBean> getaorrLeavebyEmpid(int empid) {
+			return stmt.query("select * from leave_admin where emp_id=? and 1=1 group by response_id",
+					new BeanPropertyRowMapper<AdminsideLeaveBean>(AdminsideLeaveBean.class), new Object[] { empid });
+
+		}
+
+		public List<AdminsideLeaveBean> getaorrLeavebyEmpidMonthwise(int empid, String month) {
+			return stmt.query("select * from leave_admin where emp_id=? and month=? and 1=1 group by response_id",
+					new BeanPropertyRowMapper<AdminsideLeaveBean>(AdminsideLeaveBean.class), new Object[] { empid, month });
+
+		}
+		
+	
 	/*
 	 * public List<AdminsideLeaveBean> gettotalLeavebyleaveid(int leaveid) {
 	 * System.out.println("Hey i m here dear vidhi"); return
